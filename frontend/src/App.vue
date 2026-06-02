@@ -24,7 +24,7 @@ import AppLoader from './components/AppLoader.vue'
 </script>
 
 <style>
-/* ── CSS Variables globales (paleta ShopTogether) ─ */
+/* ── CSS Variables globales (paleta ShopTogether)  */
 :root {
   --navy:      #1D3461;
   --blue:      #1565C0;
