@@ -128,7 +128,7 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key:      ${{ secrets.SSH_PRIVATE_KEY }}
           source:   "frontend/dist/*"
-          target:   "public_html/shop/"
+          target:   "public_html/shop.jpurrac.cl/"
           strip_components: 2
 
       - name: Sin cambios
@@ -163,7 +163,7 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key:      ${{ secrets.SSH_PRIVATE_KEY }}
           source:   "backend/"
-          target:   "public_html/"
+          target:   "public_html/api-shop.jpurrac.cl"
           strip_components: 1
           # vendor/, .env y logs se excluyen via .scpignore (ver abajo)
 
