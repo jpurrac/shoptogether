@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// ── Broadcasting auth (Reverb / Echo) ──────────────────────────────────────
+// ── Broadcasting auth (Reverb / Echo) ─────────────────────────────────────
 Route::middleware('auth:sanctum')->post('/broadcasting/auth', function (\Illuminate\Http\Request $request) {
     return Broadcast::auth($request);
 });
