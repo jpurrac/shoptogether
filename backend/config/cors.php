@@ -6,7 +6,7 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['https://front.jpurrac.cl', 'http://localhost:5173'],
+    'allowed_origins' => ['https://shop.jpurrac.cl', 'http://localhost:5173'],
 
     'allowed_origins_patterns' => [],
 
