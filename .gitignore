@@ -1,0 +1,71 @@
+# ─────────────────────────────────────────────
+# ShopTogether — .gitignore
+# ─────────────────────────────────────────────
+
+# ── Raíz ─────────────────────────────────────
+.env
+.env.*
+!.env.example
+!.env.production
+
+node_modules/
+*.log
+
+# Documento generado localmente
+ShopTogether-Deploy-Guide.docx
+generate-deploy-doc.js
+package.json
+package-lock.json
+
+# ── Backend (Laravel) ────────────────────────
+backend/.env
+backend/.env.*
+!backend/.env.example
+
+backend/vendor/
+backend/node_modules/
+
+backend/storage/logs/*
+!backend/storage/logs/.gitkeep
+
+backend/storage/framework/cache/*
+!backend/storage/framework/cache/.gitkeep
+
+backend/storage/framework/sessions/*
+!backend/storage/framework/sessions/.gitkeep
+
+backend/storage/framework/views/*
+!backend/storage/framework/views/.gitkeep
+
+backend/bootstrap/cache/*
+!backend/bootstrap/cache/.gitkeep
+
+backend/public/hot
+backend/public/storage
+
+backend/.phpunit.result.cache
+backend/_ide_helper.php
+backend/_ide_helper_models.php
+backend/.phpstorm.meta.php
+
+# ── Frontend (Vue / Vite) ─────────────────────
+frontend/node_modules/
+frontend/dist/
+frontend/.env.local
+
+frontend/.vite/
+frontend/coverage/
+
+# ── Docker ────────────────────────────────────
+mysql-data/
+
+# ── OS / Editor ───────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
