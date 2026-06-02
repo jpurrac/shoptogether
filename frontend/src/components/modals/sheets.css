@@ -1,0 +1,103 @@
+/* sheets.css — estilos compartidos por todos los modales */
+
+.sh-title {
+  font-family: 'Nunito', sans-serif;
+  font-weight: 800;
+  font-size: 18px;
+  color: #1A2332;
+  margin-bottom: 18px;
+}
+
+.field { margin-bottom: 14px; }
+
+.inp-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #5A6B82;
+  margin-bottom: 6px;
+  display: block;
+}
+
+.opt { color: #9AABBB; font-weight: 400; }
+
+.inp {
+  width: 100%;
+  border: 1.5px solid #E8ECF2;
+  border-radius: 14px;
+  padding: 12px 15px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 14px;
+  color: #1A2332;
+  background: #F4F6FA;
+  outline: none;
+  transition: border-color .15s, box-shadow .15s;
+  box-sizing: border-box;
+}
+.inp:focus {
+  border-color: #1565C0;
+  box-shadow: 0 0 0 3px rgba(21, 101, 192, .1);
+  background: white;
+}
+
+.btn {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 14px;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 800;
+  font-size: 15px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.btn-primary { background: linear-gradient(135deg, #1565C0, #00ACC1); color: white; box-shadow: 0 4px 16px rgba(21,101,192,.3); }
+.btn-green   { background: linear-gradient(135deg, #43A047, #66BB6A); color: white; box-shadow: 0 4px 16px rgba(67,160,71,.3); }
+.btn-ghost   { background: #F4F6FA; color: #5A6B82; }
+.btn-danger  { background: #FFF1F0; color: #E53935; border: 1.5px solid #FFCDD2; }
+.btn:disabled { opacity: .5; cursor: not-allowed; }
+
+.btn-row { display: flex; gap: 10px; }
+.btn-row .btn { flex: 1; }
+
+/* Stepper */
+.stepper { display: flex; align-items: center; border: 1.5px solid #E8ECF2; border-radius: 12px; overflow: hidden; background: #F4F6FA; }
+.step-btn { width: 42px; height: 44px; border: none; background: transparent; font-size: 20px; color: #1565C0; cursor: pointer; font-weight: 700; }
+.step-btn:disabled { color: #9AABBB; cursor: not-allowed; }
+.step-val { flex: 1; text-align: center; font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 16px; color: #1A2332; border-left: 1.5px solid #E8ECF2; border-right: 1.5px solid #E8ECF2; line-height: 44px; }
+
+/* Código de acceso */
+.code-wrap { display: flex; gap: 8px; justify-content: center; margin-bottom: 6px; }
+.cc {
+  width: 48px; height: 56px;
+  border: 2px solid #E8ECF2; border-radius: 14px;
+  text-align: center;
+  font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 22px; color: #1A2332;
+  background: #F4F6FA; outline: none; text-transform: uppercase;
+}
+.cc:focus { border-color: #1565C0; box-shadow: 0 0 0 3px rgba(21,101,192,.12); background: white; }
+
+/* Eliminar */
+.del-icon  { font-size: 40px; margin: 0 auto 14px; }
+.del-title { font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 18px; color: #1A2332; text-align: center; margin-bottom: 6px; }
+.del-sub   { font-size: 13px; color: #5A6B82; text-align: center; margin-bottom: 24px; line-height: 1.5; }
+
+/* Cerrar lista */
+.cl-icon { width: 44px; height: 44px; background: linear-gradient(135deg,#43A047,#66BB6A); border-radius: 14px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 22px; }
+
+.warn-box { background: #FFF8E1; border: 1px solid #FFE082; border-radius: 12px; padding: 10px 14px; margin-bottom: 16px; font-size: 12px; color: #E65100; font-weight: 600; }
+
+.summary-box { background: #F4F6FA; border: 1px solid #E8ECF2; border-radius: 16px; padding: 4px 16px; margin-bottom: 16px; }
+.sr { display: flex; justify-content: space-between; align-items: center; padding: 11px 0; border-bottom: 1px solid #E8ECF2; }
+.sr-l { font-size: 13px; color: #5A6B82; font-weight: 500; }
+.sr-v { font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 14px; color: #1A2332; }
+
+.pay-btn { padding: 10px 8px; border: 1.5px solid #E8ECF2; border-radius: 12px; background: #F4F6FA; font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 12px; color: #5A6B82; cursor: pointer; }
+.pay-btn.active { border-color: #1565C0; background: #E3F2FD; color: #1565C0; }
+
+.payer-btn { flex: 1; padding: 10px; border: 1.5px solid #E8ECF2; border-radius: 12px; background: #F4F6FA; font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 13px; color: #5A6B82; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
+.payer-btn.active { border-color: #1565C0; background: #E3F2FD; color: #1565C0; }
+
+.av-sm { width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 8px; font-weight: 800; color: white; }

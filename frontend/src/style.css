@@ -1,0 +1,7 @@
+
+/* @config "../tailwind.config.js"; */
+@plugin "flowbite/plugin";
+@source "../node_modules/flowbite";
+
+@import "tailwindcss";
+
