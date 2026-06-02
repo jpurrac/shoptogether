@@ -3,7 +3,7 @@
     <div v-if="isLoading" class="overlay">
       <div class="spinner-wrap">
         <div class="spinner" />
-        <span class="label">Cargando...</span>
+        <span class="label">Cargando..</span>
       </div>
     </div>
   </Transition>
