@@ -59,7 +59,7 @@
           </div>
           <div class="field" style="margin-bottom:20px;">
             <label class="inp-label">Repetir Contraseña</label>
-            <input v-model="modalCreateUser.confirmPassword" class="inp" type="password" placeholder="Mínimo 8 caracteres" />
+            <input v-model="modalCreateUser.confirm_password" class="inp" type="password" placeholder="Mínimo 8 caracteres" />
           </div>
           <button class="btn btn-primary" @click="CreateUser" :disabled="!passwordsMatch">
             Crear cuenta
@@ -99,13 +99,13 @@ import { Alert } from '../stores/alert.js'
 const router = useRouter()
 const CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 const modalLogin = ref({email : '' , password : ''});
-const modalCreateUser = ref({name: '', email: '', password: '', confirmPassword: '', image: null});
+const modalCreateUser = ref({name: '', email: '', password: '', confirm_password: '', image: null});
 const imagePreview = ref(null);
 const mode = ref('login') // 'login' o 'register'
 const google = window.google; // Asegura que google esté disponible globalmente
 
 const passwordsMatch = computed(() =>
-  modalCreateUser.value.password && modalCreateUser.value.password === modalCreateUser.value.confirmPassword
+  modalCreateUser.value.password && modalCreateUser.value.password === modalCreateUser.value.confirm_password
 )
 
 const canSubmit = computed(() => modalLogin.value.email.trim() && modalLogin.value.password.length >= 6)
@@ -115,7 +115,7 @@ const CreateUser = () => {
   formData.append('name', modalCreateUser.value.name || '')
   formData.append('email', modalCreateUser.value.email || '')
   formData.append('password', modalCreateUser.value.password || '')
-  formData.append('confirmPassword', modalCreateUser.value.confirmPassword || '')
+  formData.append('confirm_password', modalCreateUser.value.confirm_password || '')
 
   if (modalCreateUser.value.image) {
     formData.append('image', modalCreateUser.value.image)
