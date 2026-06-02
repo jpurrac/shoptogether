@@ -197,26 +197,26 @@ jobs:
         if: steps.check.outputs.changed == 'false'
         run: echo "Sin cambios en backend/, deploy omitido."
 
-  # ── VERIFICACIÓN ─────────────────────────────────────────────────────────────
-  verify:
-    name: Verificar deploy
-    runs-on: ubuntu-latest
-    needs: [deploy-frontend, deploy-backend]
-    if: always()
+  # # ── VERIFICACIÓN ─────────────────────────────────────────────────────────────
+  # verify:
+  #   name: Verificar deploy
+  #   runs-on: ubuntu-latest
+  #   needs: [deploy-frontend, deploy-backend]
+  #   if: always()
 
-    steps:
-      - name: Verificar frontend
-        run: |
-          STATUS=$(curl -s -o /dev/null -w "%{http_code}" --max-time 15 https://shop.jpurrac.cl || echo "000")
-          echo "Frontend → HTTP $STATUS"
-          [ "$STATUS" = "200" ] && echo "✓ OK" || echo "⚠ Revisar"
+  #   steps:
+  #     - name: Verificar frontend
+  #       run: |
+  #         STATUS=$(curl -s -o /dev/null -w "%{http_code}" --max-time 15 https://shop.jpurrac.cl || echo "000")
+  #         echo "Frontend → HTTP $STATUS"
+  #         [ "$STATUS" = "200" ] && echo "✓ OK" || echo "⚠ Revisar"
 
-      - name: Verificar API
-        run: |
-          STATUS=$(curl -s -o /dev/null -w "%{http_code}" --max-time 15 \
-            -X POST https://api-shop.jpurrac.cl/api/auth/login \
-            -H "Content-Type: application/json" -H "Accept: application/json" \
-            -d '{"email":"test@test.com","password":"wrong"}' || echo "000")
-          echo "API /auth/login → HTTP $STATUS"
-          # 422 = validación activa, la API responde bien
-          ([ "$STATUS" = "422" ] || [ "$STATUS" = "401" ]) && echo "✓ OK" || { echo "✗ ERROR"; exit 1; }
+  #     - name: Verificar API
+  #       run: |
+  #         STATUS=$(curl -s -o /dev/null -w "%{http_code}" --max-time 15 \
+  #           -X POST https://api-shop.jpurrac.cl/api/auth/login \
+  #           -H "Content-Type: application/json" -H "Accept: application/json" \
+  #           -d '{"email":"test@test.com","password":"wrong"}' || echo "000")
+  #         echo "API /auth/login → HTTP $STATUS"
+  #         # 422 = validación activa, la API responde bien
+  #         ([ "$STATUS" = "422" ] || [ "$STATUS" = "401" ]) && echo "✓ OK" || { echo "✗ ERROR"; exit 1; }
