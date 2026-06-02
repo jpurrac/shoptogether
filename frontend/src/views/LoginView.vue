@@ -120,19 +120,14 @@ const CreateUser = () => {
   if (modalCreateUser.value.image) {
     formData.append('image', modalCreateUser.value.image)
   }
-  api.post('/auth/register', formData, {
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-  })
-  .then(res => {
-    let response = res.data;
-    if(response.status_code != 201) return Alert({msg: 'Error al crear usuario', color: 'red'});
-    modalCreateUser.value = null;
-    Alert({msg: response.message, color: 'green'});
+  api.post('/auth/register', formData, { headers: { 'Content-Type': 'multipart/form-data' } })
+  .then(() => {
+    Alert({ msg: '¡Cuenta creada! Inicia sesión.', color: 'green' })
+    modalCreateUser.value = { name: '', email: '', password: '', password_confirmation: '', image: null }
+    mode.value = 'login'
   }).catch(err => {
-    console.error('Error al crear usuario:', err)
-    Alert({msg: 'Error al crear usuario', color: 'red'});
+    const msg = err.response?.data?.message ?? 'Error al crear usuario'
+    Alert({ msg, color: 'red' })
   })
 }
 
