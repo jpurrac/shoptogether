@@ -120,7 +120,7 @@ jobs:
           VITE_SOCKET_ENABLED: 'false'
         run: npm run build
 
-      - name: Deploy via SCP → /public_html/shop/
+      - name: Deploy via SCP → /public_html/shop.jpurrac.cl
         if: steps.check.outputs.changed == 'true'
         uses: appleboy/scp-action@master
         with:
@@ -163,7 +163,7 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key:      ${{ secrets.SSH_PRIVATE_KEY }}
           source:   "backend/"
-          target:   "public_html/api-shop.jpurrac.cl"
+          target:   "public_html/api-shop.jpurrac.cl/"
           strip_components: 1
           # vendor/, .env y logs se excluyen via .scpignore (ver abajo)
 
@@ -176,7 +176,7 @@ jobs:
           key:      ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             set -e
-            cd ~/public_html/api-shop
+            cd ~/public_html/api-shop.jpurrac.cl
 
             echo "── Composer install ──"
             php8.3 composer.phar install --no-dev --optimize-autoloader --no-interaction
