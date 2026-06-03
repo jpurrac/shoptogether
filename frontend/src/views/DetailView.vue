@@ -27,6 +27,9 @@
             <button class="ctx-item" @click="showDetailCtx = false; showCollab = true">
               <UsersIcon /> Colaboradores
             </button>
+            <button class="ctx-item" @click="showDetailCtx = false; showEditList = true">
+              <PencilIcon /> Editar lista
+            </button>
             <button class="ctx-item" @click="showDetailCtx = false; showClose = true">
               <CheckCircleIcon /> Cerrar lista
             </button>
@@ -44,17 +47,18 @@
         <div class="bb-top">
           <div>
             <span class="bb-cur">{{ formatMoney(spent) }}</span>
-            <span class="bb-of">de {{ formatMoney(list?.budget) }}</span>
+            <span class="bb-of" v-if="list?.budget">de {{ formatMoney(list.budget) }}</span>
+            <span class="bb-of" v-else>en carrito</span>
           </div>
-          <div class="bb-right">
+          <div class="bb-right" v-if="list?.budget">
             <div class="bb-avail-label">Disponible</div>
-            <div class="bb-avail">{{ formatMoney((list?.budget || 0) - spent) }}</div>
+            <div class="bb-avail">{{ formatMoney(list.budget - spent) }}</div>
           </div>
         </div>
-        <div class="prog-track" style="height:8px;">
+        <div class="prog-track" style="height:8px;" v-if="list?.budget">
           <div class="prog-fill" :style="{ width: budgetPct + '%', background: 'var(--blue-grad)' }" />
         </div>
-        <div class="bb-status" :style="{ color: budgetPct <= 100 ? '#43A047' : '#E53935' }">
+        <div class="bb-status" v-if="list?.budget" :style="{ color: budgetPct <= 100 ? '#43A047' : '#E53935' }">
           {{ budgetPct <= 100 ? '✓ Dentro del presupuesto' : '⚠ Sobre el presupuesto' }}
         </div>
       </div>
@@ -62,10 +66,6 @@
 
     <div style="height:8px;" />
 
-    <!-- ── Tip de gestos ── -->
-    <div class="tip-box">
-      ℹ️ Toca el producto para editarlo · Desliza ← para eliminar
-    </div>
 
     <!-- ── PENDIENTES ── -->
     <div class="ish">
@@ -124,14 +124,16 @@
       </div>
     </Transition>
 
-    <!-- ── FAB agregar ── -->
+    <!-- ── FAB agregar (siempre visible) ── -->
     <div class="float-actions">
       <button class="btn btn-primary" @click="showAddItem = true">
         <PlusIcon /> Agregar producto
       </button>
     </div>
+    <div style="height:80px;" />
 
     <!-- ── Modales ── -->
+    <EditListSheet   v-model="showEditList"   :list="list"          @submit="onEditList" />
     <EditItemSheet   v-model="showEditItem"   :item="editingItem"   @submit="onEditItem" />
     <DeleteItemSheet v-model="showDeleteItem" :item="deletingItem"  @confirm="onDeleteItem" />
     <CloseListSheet  v-model="showClose"      :list="list"          :items="items"  @submit="onCloseList" />
@@ -173,6 +175,7 @@ import { usePolling }    from '../composables/usePolling.js'
 import ItemCard from '../components/ItemCard.vue'
 import BottomSheet from '../components/BottomSheet.vue'
 import AddItemSheet from '../components/modals/AddItemSheet.vue'
+import EditListSheet from '../components/modals/EditListSheet.vue'
 import EditItemSheet from '../components/modals/EditItemSheet.vue'
 import DeleteItemSheet from '../components/modals/DeleteItemSheet.vue'
 import CloseListSheet from '../components/modals/CloseListSheet.vue'
@@ -186,6 +189,7 @@ const ChevronLeftIcon  = () => s('M15 19l-7-7 7-7', { 'stroke-width': 2.5 })
 const DotsVerticalIcon = () => h('svg', { width:16, height:16, fill:'currentColor', viewBox:'0 0 24 24' }, ['5','12','19'].map(cy => h('circle', { cx:12, cy, r:1.5 })))
 const PlusIcon         = () => s('M12 4v16m8-8H4', { 'stroke-width': 2.5 })
 const TrashIcon        = () => s('M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16', { width:14, height:14 })
+const PencilIcon       = () => s('M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z', { width:14, height:14 })
 const CheckCircleIcon  = () => s('M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z', { width:14, height:14 })
 const UsersIcon        = () => s('M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0', { width:14, height:14 })
 
@@ -206,6 +210,7 @@ const showDetailCtx  = ref(false)
 const showCollab     = ref(false)
 const showClose      = ref(false)
 const showAddItem    = ref(false)
+const showEditList   = ref(false)
 const showEditItem   = ref(false)
 const showDeleteItem = ref(false)
 const showDeleteList = ref(false)
@@ -278,6 +283,16 @@ async function onToggle(item) {
 
 function openEditItem(item)   { editingItem.value = item;   showEditItem.value = true }
 function openDeleteItem(item) { deletingItem.value = item;  showDeleteItem.value = true }
+
+async function onEditList(data) {
+  try {
+    const { data: updated } = await api.put(`/lists/${list.value.id}`, data)
+    list.value = { ...list.value, ...updated }
+    Alert({ msg: 'Lista actualizada', color: 'green' })
+  } catch {
+    Alert({ msg: 'Error al actualizar la lista', color: 'red' })
+  }
+}
 
 async function onEditItem(updated) {
   try {
@@ -396,11 +411,6 @@ function formatMoney(v) {
 .prog-track { height:5px; background:#E8ECF2; border-radius:99px; overflow:hidden; }
 .prog-fill  { height:100%; border-radius:99px; }
 
-.tip-box {
-  margin:0 16px 10px; padding:9px 14px;
-  background:#EFF6FF; border:1px solid #BFDBFE; border-radius:12px;
-  font-size:11px; color:#1D4ED8;
-}
 
 .ish { display:flex; align-items:center; justify-content:space-between; padding:10px 18px 8px; }
 .ishl { font-size:11px; font-weight:700; letter-spacing:.07em; text-transform:uppercase; color:#9AABBB; display:flex; align-items:center; gap:6px; }

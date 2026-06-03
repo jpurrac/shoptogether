@@ -17,11 +17,13 @@
     <!-- Resumen -->
     <div class="summary-box">
       <div class="sr"><span class="sr-l">Productos en carrito</span><span class="sr-v">{{ checked }} de {{ total }}</span></div>
-      <div class="sr"><span class="sr-l">Presupuesto</span><span class="sr-v">{{ formatMoney(list?.budget) }}</span></div>
-      <div class="sr"><span class="sr-l">Total en carrito</span><span class="sr-v" style="color:#1565C0;">{{ formatMoney(cartTotal) }}</span></div>
-      <div class="sr" style="border:none;">
+      <div class="sr" v-if="list?.budget"><span class="sr-l">Presupuesto</span><span class="sr-v">{{ formatMoney(list.budget) }}</span></div>
+      <div class="sr" :style="list?.budget ? '' : 'border:none'"><span class="sr-l">Total en carrito</span><span class="sr-v" style="color:#1565C0;">{{ formatMoney(cartTotal) }}</span></div>
+      <div class="sr" style="border:none;" v-if="list?.budget">
         <span class="sr-l">Diferencia</span>
-        <span class="sr-v" style="color:#43A047;">+{{ formatMoney((list?.budget || 0) - cartTotal) }}</span>
+        <span class="sr-v" :style="{ color: list.budget - cartTotal >= 0 ? '#43A047' : '#E53935' }">
+          {{ list.budget - cartTotal >= 0 ? '+' : '' }}{{ formatMoney(list.budget - cartTotal) }}
+        </span>
       </div>
     </div>
 
