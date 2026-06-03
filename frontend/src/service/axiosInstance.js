@@ -63,7 +63,7 @@ const stop = () => {
 -------------------------- */
 api.interceptors.request.use(
   (config) => {
-    start() // ✅ SIEMPRE
+    if (!config._silent) start()
 
     const token = GetAuthToken()
     if (token && !config.headers?.Authorization) {
@@ -83,12 +83,12 @@ api.interceptors.request.use(
 -------------------------- */
 api.interceptors.response.use(
   (response) => {
-    stop()
+    if (!response.config._silent) stop()
     return response
   },
   (error) => {
     const { response } = error
-    stop()
+    if (!error.config?._silent) stop()
 
     if (response?.status === 401) {
       ClearAuthToken()

@@ -166,7 +166,7 @@
 </template>
 
 <script setup>
-import { h, ref, computed, onMounted } from 'vue'
+import { h, ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useListSocket } from '../composables/useListSocket.js'
 import { usePolling }    from '../composables/usePolling.js'
@@ -228,12 +228,14 @@ function handleSocketEvent(type, payload) {
   }
 }
 
+// Polling silencioso (no activa loader, solo en listas compartidas)
 async function refreshItems() {
-  try {
-    const { data } = await api.get(`/lists/${route.params.id}/items`)
-    items.value = data
-  } catch {}
+  const { data } = await api.get(`/lists/${route.params.id}/items`, { _silent: true })
+  items.value = data
 }
+
+// El stop del polling se guarda aquí para llamarlo en onUnmounted
+let stopPolling = null
 
 async function fetchList() {
   try {
@@ -244,12 +246,13 @@ async function fetchList() {
     const isShared      = (data.members?.length ?? 0) > 1
     const socketEnabled = import.meta.env.VITE_SOCKET_ENABLED !== 'false'
 
-    if (socketEnabled) {
-      // Desarrollo / servidor con Reverb
-      useListSocket(data.id, isShared, handleSocketEvent)
-    } else {
-      // Producción sin WebSocket → polling cada 10 seg
-      usePolling(() => refreshItems(), isShared, 10_000)
+    if (isShared) {
+      if (socketEnabled) {
+        useListSocket(data.id, true, handleSocketEvent)
+      } else {
+        const { stop } = usePolling(refreshItems, 10_000)
+        stopPolling = stop
+      }
     }
   } catch {
     Alert({ msg: 'Error al cargar la lista', color: 'red' })
@@ -258,6 +261,10 @@ async function fetchList() {
 }
 
 onMounted(fetchList)
+
+onUnmounted(() => {
+  stopPolling?.()
+})
 
 async function onToggle(item) {
   try {

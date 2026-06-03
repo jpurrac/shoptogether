@@ -1,35 +1,29 @@
-import { onUnmounted, ref } from 'vue'
-
 /**
- * Polling de ítems cada `interval` ms.
- * Solo se activa si `shared` es true.
- * Se detiene automáticamente al desmontar el componente.
+ * Polling silencioso — no activa el loader global.
+ * Devuelve { stop } para que el componente lo detenga manualmente.
+ *
+ * IMPORTANTE: llamar stop() en onUnmounted() desde el componente,
+ * no desde dentro del composable, para que Vue lo asocie correctamente.
  *
  * @param {Function} fetchFn  - función async a ejecutar en cada tick
- * @param {boolean}  shared   - solo activa si la lista es compartida
- * @param {number}   interval - milisegundos entre peticiones (default 10 000)
+ * @param {number}   interval - ms entre peticiones (default 10 000)
  */
-export function usePolling(fetchFn, shared, interval = 10_000) {
-  if (!shared) return { stop: () => {} }
-
-  const active = ref(true)
-  let timer    = null
+export function usePolling(fetchFn, interval = 10_000) {
+  let active = true
+  let timer  = null
 
   async function tick() {
-    if (!active.value) return
+    if (!active) return
     try { await fetchFn() } catch {}
-    if (active.value) timer = setTimeout(tick, interval)
+    if (active) timer = setTimeout(tick, interval)
   }
 
-  // Primer tick después del primer intervalo (los datos ya se cargaron al montar)
   timer = setTimeout(tick, interval)
 
   function stop() {
-    active.value = false
+    active = false
     clearTimeout(timer)
   }
-
-  onUnmounted(stop)
 
   return { stop }
 }
