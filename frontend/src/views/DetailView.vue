@@ -124,13 +124,14 @@
       </div>
     </Transition>
 
-    <!-- ── FAB agregar (siempre visible) ── -->
-    <div class="float-actions">
-      <button class="btn btn-primary" @click="showAddItem = true">
-        <PlusIcon /> Agregar producto
-      </button>
-    </div>
     <div style="height:80px;" />
+
+    <!-- ── FAB flotante ── -->
+    <button class="fab" @click="showAddItem = true" :class="{ expanded: fabExpanded }"
+      @mouseenter="fabExpanded = true" @mouseleave="fabExpanded = false">
+      <span class="fab-icon"><PlusIcon /></span>
+      <span class="fab-label">Agregar</span>
+    </button>
 
     <!-- ── Modales ── -->
     <EditListSheet   v-model="showEditList"   :list="list"          @submit="onEditList" />
@@ -217,6 +218,7 @@ const showDeleteList = ref(false)
 
 const editingItem  = ref(null)
 const deletingItem = ref(null)
+const fabExpanded  = ref(false)
 
 function handleSocketEvent(type, payload) {
   if (type === 'item_created') {
@@ -430,9 +432,35 @@ function formatMoney(v) {
 .fb-sub   { font-size:11px; color:rgba(255,255,255,.8); }
 .fb-btn   { background:white; border:none; border-radius:10px; padding:8px 14px; font-family:'Nunito',sans-serif; font-weight:800; font-size:12px; color:#43A047; cursor:pointer; }
 
-.float-actions { position:sticky; bottom:0; padding:10px 16px 28px; background:linear-gradient(to top,#F4F6FA 60%,transparent); }
-.btn { width:100%; padding:14px; border:none; border-radius:14px; font-family:'Nunito',sans-serif; font-weight:800; font-size:15px; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; }
-.btn-primary { background:linear-gradient(135deg,#1565C0,#00ACC1); color:white; box-shadow:0 4px 16px rgba(21,101,192,.3); }
+.fab {
+  position: fixed;
+  bottom: 28px;
+  right: 50%;
+  transform: translateX(50%);
+  max-width: calc(430px - 32px);
+  width: calc(100vw - 32px);
+
+  height: 52px;
+  border: none;
+  border-radius: 26px;
+  background: linear-gradient(135deg, #1565C0, #00ACC1);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 800;
+  font-size: 15px;
+  cursor: pointer;
+  box-shadow: 0 6px 24px rgba(21, 101, 192, .40);
+  transition: box-shadow .2s, transform .15s;
+  z-index: 100;
+}
+.fab:active { transform: translateX(50%) scale(.97); }
+
+.fab-icon { display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.fab-label { white-space: nowrap; }
 
 .members-list { display:flex; flex-direction:column; gap:8px; margin-bottom:20px; }
 .member-row { display:flex; align-items:center; gap:12px; padding:12px 14px; border:1px solid #E8ECF2; border-radius:16px; background:#F4F6FA; }
